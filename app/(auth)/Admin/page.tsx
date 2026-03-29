@@ -2,6 +2,10 @@ import { redirect } from 'next/navigation';
 import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase/server';
 import AdminClient from '@/components/admin/AdminClient';
 
+// 🛑 CRITICAL FIX: Forces Next.js to fetch live data instead of failing during Vercel's static build
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function AdminPage() {
   const supabase = createServerSupabaseClient();
   const adminSupabase = createAdminClient();
@@ -33,11 +37,11 @@ export default async function AdminPage() {
   return (
     <AdminClient
       adminName={profile.full_name}
-      users={users || []}
-      draws={draws || []}
-      results={results || []}
-      charities={charities || []}
-      stats={{ totalPool, totalCharity, activeUsers, totalUsers: users?.length || 0 }}
+      // 🛑 CRITICAL FIX: Grouped everything into initialData to match what your Client expects
+      initialData={{
+        users: users || [],
+        stats: { totalPool, totalCharity, activeUsers, totalUsers: users?.length || 0, drawEntries: draws?.length || 0 }
+      }}
     />
   );
 }
