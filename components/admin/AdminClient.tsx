@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import CharitiesSection from './CharitiesSection'; // Ensure this file exists in the same folder
+import CharitiesSection from './CharitiesSection';
 import { 
   Users, Trophy, Heart, Activity, Search, 
   ExternalLink, Shield, LayoutDashboard,
@@ -10,7 +10,11 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
-export default function AdminClient({ adminName, initialData }: any) {
+// 🛑 CRITICAL FIX: Added default empty structures so it never reads "undefined"
+export default function AdminClient({ 
+  adminName, 
+  initialData = { users: [], stats: {} } 
+}: any) {
   const router = useRouter();
   const supabase = createClient();
   const [activeTab, setActiveTab] = useState('overview');
@@ -41,7 +45,8 @@ export default function AdminClient({ adminName, initialData }: any) {
     setTimeout(() => setIsRefreshing(false), 800);
   };
 
-  const filteredUsers = initialData.users.filter((u: any) => 
+  // 🛑 CRITICAL FIX: Safe mapping with (initialData?.users || [])
+  const filteredUsers = (initialData?.users || []).filter((u: any) => 
     u.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
     u.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -130,10 +135,11 @@ export default function AdminClient({ adminName, initialData }: any) {
           {activeTab === 'overview' && (
             <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="grid grid-cols-4 gap-6">
-                <StatCard label="Total Users" value={initialData.stats.totalUsers} detail={`${initialData.stats.activeUsers} Active`} color="text-slate-900" />
-                <StatCard label="Active Pool" value={`£${initialData.stats.totalPool}`} detail="Real-time contribution" color="text-[#10B981]" />
-                <StatCard label="Charity Impact" value={`£${initialData.stats.totalCharity}`} detail="Total generated" color="text-rose-600" />
-                <StatCard label="Draw Entries" value={initialData.stats.drawEntries} detail="Validated scores" color="text-orange-500" />
+                {/* 🛑 CRITICAL FIX: Added ?. so it safely falls back to 0 if data isn't loaded yet */}
+                <StatCard label="Total Users" value={initialData?.stats?.totalUsers || 0} detail={`${initialData?.stats?.activeUsers || 0} Active`} color="text-slate-900" />
+                <StatCard label="Active Pool" value={`£${initialData?.stats?.totalPool || 0}`} detail="Real-time contribution" color="text-[#10B981]" />
+                <StatCard label="Charity Impact" value={`£${initialData?.stats?.totalCharity || 0}`} detail="Total generated" color="text-rose-600" />
+                <StatCard label="Draw Entries" value={initialData?.stats?.drawEntries || 0} detail="Validated scores" color="text-orange-500" />
               </div>
 
               <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm p-8">
@@ -142,7 +148,8 @@ export default function AdminClient({ adminName, initialData }: any) {
                   <button onClick={() => setActiveTab('users')} className="text-xs font-bold text-[#10B981] hover:underline uppercase tracking-widest">View All Members</button>
                 </div>
                 <div className="space-y-3">
-                  {initialData.users.slice(0, 5).map((u: any) => (
+                  {/* 🛑 CRITICAL FIX: Safe mapping */}
+                  {(initialData?.users || []).slice(0, 5).map((u: any) => (
                     <div key={u.id} className="flex items-center justify-between p-5 bg-slate-50/50 rounded-2xl border border-slate-100 hover:border-emerald-200 transition-colors">
                       <div className="flex items-center gap-4">
                         <div className={`w-2 h-2 rounded-full ${u.subscription_status === 'active' ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
