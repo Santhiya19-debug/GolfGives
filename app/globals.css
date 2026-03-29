@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-primary: #2d9d92;
+  --brand-light: #d9f0ed;
+  --brand-mist: #f0f9f8;
+  --navy: #1a2e2d;
+  --text-muted: #5a7b79;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--navy);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-500 text-white font-medium rounded-xl
+           hover:bg-brand-600 active:scale-95 transition-all duration-150 shadow-sm;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-100 text-brand-700 font-medium rounded-xl
+           hover:bg-brand-200 active:scale-95 transition-all duration-150;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border border-brand-200 text-brand-600 font-medium rounded-xl
+           hover:bg-brand-50 active:scale-95 transition-all duration-150;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 bg-mist-100 border border-mist-200 rounded-xl text-navy-800
+           placeholder:text-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent
+           transition-all duration-150;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-card border border-mist-100 p-6;
+  }
+
+  .card-mist {
+    @apply bg-mist-50 rounded-2xl border border-mist-200 p-6;
+  }
+
+  .section-label {
+    @apply text-brand-500 text-sm font-semibold tracking-widest uppercase mb-3;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-display font-bold text-navy-800 leading-tight;
+  }
+
+  .nav-link {
+    @apply text-navy-700 hover:text-brand-500 font-medium transition-colors duration-150 text-sm;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  .badge-active {
+    @apply badge bg-emerald-100 text-emerald-700;
+  }
+
+  .badge-inactive {
+    @apply badge bg-red-50 text-red-600;
+  }
+
+  .badge-pending {
+    @apply badge bg-amber-50 text-amber-700;
+  }
+
+  .stat-card {
+    @apply card-mist flex flex-col gap-1;
+  }
+
+  .stat-value {
+    @apply text-2xl font-display font-bold text-navy-800;
+  }
+
+  .stat-label {
+    @apply text-sm text-brand-400 font-medium;
+  }
+}
+
+/* Smooth page transitions */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--brand-mist); }
+::-webkit-scrollbar-thumb { background: var(--brand-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-primary); }
